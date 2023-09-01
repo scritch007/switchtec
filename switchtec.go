@@ -78,7 +78,7 @@ func Open(path string) (*Device, error) {
 
 	f := os.NewFile(uintptr(fd), path)
 	if f == nil {
-		return nil, fmt.Errorf("Cannot open new file %s", path)
+		return nil, fmt.Errorf("cannot open new file %s", path)
 	}
 
 	syscall.SetNonblock(int(f.Fd()), false)
@@ -99,7 +99,9 @@ func Open(path string) (*Device, error) {
 
 	id, err := dev.Identify()
 	if err != nil {
-		return dev, err
+		// If Identify fails force paxID to 0
+		id = 0
+		err = nil
 	}
 
 	dev.paxID = id
